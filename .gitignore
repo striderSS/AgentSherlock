@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# Raw sources — private, never upload
+raw/
+
+# Wiki content — private, never upload
+wiki/**/*.md
