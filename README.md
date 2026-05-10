@@ -13,6 +13,10 @@ Drop a source into `raw/`, tell your LLM to ingest it, and it will create a summ
 ├── wiki-schema.md       # Wiki structure, page formats, and LLM workflows
 ├── CLAUDE.md            # Claude Code entry point — references wiki-schema.md
 ├── AGENTS.md            # OpenAI Codex entry point — references wiki-schema.md
+├── requirements.txt     # Python dependencies for the tools package
+│
+├── tools/               # Helper scripts for source preprocessing
+│   └── preprocess.py    # Converts .rtf / .docx to plain text (cross-platform)
 │
 ├── raw/                 # Your source documents — immutable, never modified by the LLM
 │   └── assets/          # Images and attachments referenced by sources
@@ -28,6 +32,16 @@ Drop a source into `raw/`, tell your LLM to ingest it, and it will create a summ
 ```
 
 > **Note:** `raw/` contents and `wiki/**/*.md` are excluded from version control (see `.gitignore`). Only the scaffold and schema are tracked — wiki content stays local.
+
+## Setup
+
+Python 3 is required for source file preprocessing. Install dependencies once:
+
+```bash
+pip install -r requirements.txt
+```
+
+No other setup is needed. The LLM does the rest.
 
 ## Key Files
 
@@ -55,3 +69,11 @@ Single-line entry point for [Claude Code](https://claude.ai/code). Claude Code a
 Single-line entry point for OpenAI Codex (and compatible agents). Serves the same role as `CLAUDE.md` for the OpenAI toolchain.
 
 If you use a different LLM or interface, paste the contents of `wiki-schema.md` directly into your system prompt.
+
+### `tools/preprocess.py`
+
+Converts non-plain-text source files to plain text before the LLM reads them, avoiding wasted tokens on raw markup. Supports `.rtf` and `.docx`. Works on macOS, Linux, and Windows.
+
+```bash
+python3 tools/preprocess.py raw/mysource.rtf
+```
