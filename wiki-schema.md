@@ -1,6 +1,8 @@
 # Wiki Schema
 
-This document defines the structure, conventions, and workflows for this personal knowledge wiki. It is LLM-agnostic — paste it as a system prompt, or reference it via your LLM's native config file (e.g. CLAUDE.md, AGENTS.md).
+This document defines the structure and conventions for this personal knowledge wiki. It is LLM-agnostic — paste it as a system prompt, or reference it via your LLM's native config file (e.g. CLAUDE.md, AGENTS.md).
+
+Workflows (ingest, update, query, lint) are defined separately as skills under `skills/`.
 
 ---
 
@@ -26,6 +28,8 @@ wiki/                   # Your working area — create and update freely
   concepts/             # Recurring ideas, frameworks, mental models
   topics/               # Broad subject areas that aggregate concepts and sources
   queries/              # Valuable Q&A sessions worth preserving
+
+skills/                 # Workflow skill definitions (ingest, update, query, lint)
 ```
 
 ---
@@ -230,6 +234,10 @@ Each entry starts with `## [YYYY-MM-DD] <operation> | <title>` so it's grep-pars
 
 Ingested [[sources/source-slug]]. Updated: [[concepts/foo]], [[topics/bar]]. New pages: [[concepts/new-thing]].
 
+## [YYYY-MM-DD] update | Source Title
+
+Re-ingested [[sources/source-slug]] (source changed). Changed: [summary of diff]. Updated: [[concepts/foo]].
+
 ## [YYYY-MM-DD] query | Question summary
 
 Asked: "...". Answer filed at [[queries/query-slug]].
@@ -252,50 +260,3 @@ Before reading any file in `raw/`, check its extension. **Never use the `Read` t
 | `.md` / `.txt` / `.json` / `.csv` | Use the `Read` tool directly |
 
 `tools/preprocess.py` runs locally and works on macOS, Linux, and Windows. Install dependencies once with `pip install -r requirements.txt`.
-
----
-
-## Workflows
-
-### Ingest
-
-When the human adds a source to `raw/` and asks you to process it:
-
-1. Check the file extension and apply the preprocessing rule above. Read the converted plain text (not the raw file). Note the source language — all wiki pages created in this ingest must be written in that language.
-2. Briefly summarize the key ideas and ask the human if there's anything specific to focus on. (Skip if asked to batch-ingest without discussion.)
-3. Create `wiki/sources/<slug>.md` using the source page format.
-4. Read `wiki/index.md` to identify existing concept and topic pages that this source is relevant to.
-5. Update each relevant page: add a new source reference, strengthen or challenge the existing synthesis, flag any contradictions with prior sources.
-6. Create new concept or topic pages if significant new ideas aren't covered anywhere yet.
-7. Update `wiki/overview.md` if the new source meaningfully shifts the big picture.
-8. Update `wiki/index.md` — add the new source page and any new concept/topic pages.
-9. Append an entry to `wiki/log.md`.
-10. Report back: which pages were created, which were updated, anything surprising or worth discussing.
-
----
-
-### Query
-
-When the human asks a question:
-
-1. Read `wiki/index.md` to identify relevant pages.
-2. Read those pages in full.
-3. Synthesize an answer with citations (`[[page]]` references).
-4. Ask the human if the answer is worth filing. If yes, create `wiki/queries/<slug>.md` and update `wiki/index.md` and `wiki/log.md`.
-
----
-
-### Lint
-
-When asked to health-check the wiki:
-
-1. Read every page in `wiki/`.
-2. Check for:
-   - Contradictions between pages (same claim stated differently in two places)
-   - Stale synthesis (a concept page's summary predates newer sources that changed the picture)
-   - Orphan pages (no inbound links from index or other pages)
-   - Missing pages (a concept is referenced in multiple places but has no dedicated page)
-   - Missing cross-references (two related pages that don't link to each other)
-   - Data gaps (claims that could be checked or expanded with a targeted search)
-3. Report findings grouped by severity. Fix what you can; flag what needs human input.
-4. Append to `wiki/log.md`.
