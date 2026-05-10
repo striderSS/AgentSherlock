@@ -32,6 +32,8 @@ wiki/                   # Your working area — create and update freely
 
 ## Page Types
 
+**Language rule (applies to all page types below):** Before writing any page, identify the language of the raw source. Section headers follow the template exactly (keep in English). All content within sections MUST be written in the raw source's language. Do NOT translate source content into another language.
+
 ### Source page (`wiki/sources/<slug>.md`)
 
 One page per raw source. Created during ingest, never substantially rewritten (the source itself doesn't change).
@@ -239,13 +241,29 @@ Found N issues: [list]. Fixed: [list]. Still open: [list].
 
 ---
 
+## File Preprocessing
+
+Before reading any file in `raw/`, check its extension. **Never use the `Read` tool directly on non-plain-text formats** — the raw markup is unreadable and wastes tokens. Instead, convert to plain text first using the appropriate tool:
+
+| Extension | Conversion command |
+|-----------|--------------------|
+| `.rtf` | `textutil -convert txt -stdout "<path>"` |
+| `.docx` | `textutil -convert txt -stdout "<path>"` |
+| `.pdf` | Use the `Read` tool directly (it handles PDF natively) |
+| `.xlsx` / `.xls` | `python3 -c "import openpyxl; ..."` or a dedicated skill |
+| `.md` / `.txt` / `.json` / `.csv` | Use the `Read` tool directly |
+
+All conversion commands run locally on the user's machine and send no data externally.
+
+---
+
 ## Workflows
 
 ### Ingest
 
 When the human adds a source to `raw/` and asks you to process it:
 
-1. Read the source file in full.
+1. Check the file extension and apply the preprocessing rule above. Read the converted plain text (not the raw file). Note the source language — all wiki pages created in this ingest must be written in that language.
 2. Briefly summarize the key ideas and ask the human if there's anything specific to focus on. (Skip if asked to batch-ingest without discussion.)
 3. Create `wiki/sources/<slug>.md` using the source page format.
 4. Read `wiki/index.md` to identify existing concept and topic pages that this source is relevant to.
