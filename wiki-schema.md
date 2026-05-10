@@ -247,13 +247,11 @@ Before reading any file in `raw/`, check its extension. **Never use the `Read` t
 
 | Extension | Conversion command |
 |-----------|--------------------|
-| `.rtf` | `textutil -convert txt -stdout "<path>"` |
-| `.docx` | `textutil -convert txt -stdout "<path>"` |
+| `.rtf` / `.docx` | `python3 tools/preprocess.py "<path>"` |
 | `.pdf` | Use the `Read` tool directly (it handles PDF natively) |
-| `.xlsx` / `.xls` | `python3 -c "import openpyxl; ..."` or a dedicated skill |
 | `.md` / `.txt` / `.json` / `.csv` | Use the `Read` tool directly |
 
-All conversion commands run locally on the user's machine and send no data externally.
+`tools/preprocess.py` runs locally and works on macOS, Linux, and Windows. Install dependencies once with `pip install -r requirements.txt`.
 
 ---
 
