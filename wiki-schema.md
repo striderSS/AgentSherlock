@@ -189,10 +189,30 @@ The synthesized answer, with citations to wiki pages.
 
 ## Naming Conventions
 
-- Slugs: lowercase, hyphens only, no spaces. `mental-models.md`, `thinking-fast-slow.md`
-- Titles in frontmatter: title-case, human-readable
-- Wiki links use double brackets: `[[concepts/mental-models]]`
-- Source slugs: prefer `author-short-title` or `year-short-title`. E.g. `kahneman-thinking-fast-slow`
+All slugs: **lowercase for Latin characters, hyphens as separators**, 2–4 tokens. No spaces, underscores, or punctuation. Chinese characters are kept as-is.
+
+| Case | Rule |
+|------|------|
+| **Pure English** | Lowercase each word, join with hyphens. Drop articles and prepositions (`a`, `the`, `and`, `for`, `of`). |
+| **Pure Chinese** | Keep Chinese characters as-is, no segmentation, no romanization. Drop function words (`的`, `了`, `与`, `和`). |
+| **Mixed** | English parts → lowercase; Chinese parts → kept as-is. Join segments with hyphens, preserving original order. Drop function words from both languages. |
+
+**Source slugs**: prefer `author-short-title` or `year-short-title`, applying the same rules. Unknown author: use the first 1–2 content keywords.
+
+**Few-shot examples:**
+
+| Title | Language | Slug |
+|-------|----------|------|
+| "Thinking Fast and Slow" | EN | `thinking-fast-slow` |
+| "Mental Models" | EN | `mental-models` |
+| "刷题经验" | ZH | `刷题经验` |
+| "变量作用域" | ZH | `变量作用域` |
+| "LeetCode 刷题心得" | Mixed | `leetcode-刷题心得` |
+| "变量作用域与 nonlocal" | Mixed | `变量作用域-nonlocal` |
+
+**Other conventions:**
+- Titles in frontmatter: human-readable, no case transformation required
+- Wiki links use double brackets: `[[concepts/mental-models]]`, `[[concepts/变量作用域]]`
 
 ---
 

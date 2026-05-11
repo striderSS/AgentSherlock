@@ -29,4 +29,31 @@ The human will provide a file path under `raw/`. If they haven't, ask for it bef
    ## [YYYY-MM-DD] ingest | <Source Title>
    ```
 
-10. **Report back.** List which pages were created, which were updated, and anything surprising or worth discussing.
+10. **Report back** using the following JSON format, wrapped in a fenced code block:
+
+   ```json
+   {
+     "operation": "ingest",
+     "date": "YYYY-MM-DD",
+     "source": "sources/<slug>",
+     "created": [
+       "sources/<slug>",
+       "concepts/<slug>",
+       "topics/<slug>"
+     ],
+     "updated": {
+       "enriched": ["<pages where content was added or strengthened>"],
+       "contradicted": ["<pages where a contradiction with prior sources was flagged>"],
+       "structural": ["<housekeeping pages: index, log, overview>"]
+     },
+     "notes": "<anything surprising, incomplete, or worth following up — empty string if none>"
+   }
+   ```
+
+   Rules:
+   - All page paths are relative to `wiki/`, without the `.md` extension.
+   - `created` lists every page written from scratch during this ingest.
+   - `updated.enriched` lists existing concept/topic pages that received new content.
+   - `updated.contradicted` lists existing pages where a conflict with prior sources was flagged.
+   - `updated.structural` lists index, log, and overview when touched.
+   - `notes` is a single string. Use an empty string `""` if there is nothing to flag.
